@@ -8,6 +8,7 @@ import HalfwayAlertModal from '@/components/HalfwayAlertModal';
 import EmptyState from '@/components/EmptyState';
 import { useTimers } from '@/context/TimerContext';
 import { Timer } from '@/types';
+import CategoryFilter from '@/components/CategoryFilter';
 
 export default function TimersScreen() {
   const insets = useSafeAreaInsets();
@@ -31,10 +32,10 @@ export default function TimersScreen() {
   const [showHalfwayAlert, setShowHalfwayAlert] = useState(false);
 
   // Group timers by category
-  const timersByCategory = categories.reduce<Record<string, Timer[]>>((acc, category) => {
-    acc[category] = timers.filter(timer => timer.category === category);
-    return acc;
-  }, {});
+  // const timersByCategory = categories.reduce<Record<string, Timer[]>>((acc, category) => {
+  //   acc[category] = timers.filter(timer => timer.category === category);
+  //   return acc;
+  // }, {});
 
   const handleShowCompletionModal = (timer: Timer) => {
     // Only show if not already showing for this timer
@@ -60,6 +61,20 @@ export default function TimersScreen() {
     setShowHalfwayAlert(false);
   };
 
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  // Filter timers by selected category
+  const filteredTimers = selectedCategory
+    ? timers.filter(timer => timer.category === selectedCategory)
+    : timers;
+
+  // Group timers by category
+  const timersByCategory = categories.reduce<Record<string, Timer[]>>((acc, category) => {
+    acc[category] = filteredTimers.filter(timer => timer.category === category);
+    return acc;
+  }, {});
+
+
   if (timers.length === 0) {
     return (
       <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -82,6 +97,12 @@ export default function TimersScreen() {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
+    
+         <CategoryFilter
+        categories={categories}
+        selectedCategory={selectedCategory}
+        onSelectCategory={setSelectedCategory}
+      />
         {categories.map((category) => (
           timersByCategory[category] && timersByCategory[category].length > 0 && (
             <CategoryGroup

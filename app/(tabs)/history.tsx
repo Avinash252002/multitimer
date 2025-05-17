@@ -6,6 +6,7 @@ import { Clock, Tag } from 'lucide-react-native';
 import { useTimers } from '@/context/TimerContext';
 import { formatTime, timeAgo } from '@/utils/timerUtils';
 import EmptyState from '@/components/EmptyState';
+import ExportButton from '@/components/ExportButton';
 
 export default function HistoryScreen() {
   const insets = useSafeAreaInsets();
@@ -30,7 +31,7 @@ export default function HistoryScreen() {
       <View style={styles.header}>
         <Text style={styles.title}>Timer History</Text>
       </View>
-
+      <ExportButton timerLogs={timerLogs} />
       <FlatList
         data={sortedLogs}
         keyExtractor={(item) => item.id}
