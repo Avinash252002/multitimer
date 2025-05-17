@@ -1,64 +1,152 @@
-import React from "react";
-import { StyleSheet, Text, View, FlatList } from "react-native";
-import { useAppSelector } from "@/redux/hooks"; // Make sure this exists
+import React from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Clock, Tag } from 'lucide-react-native';
+import { useTimers } from '@/context/TimerContext';
+import { formatTime, timeAgo } from '@/utils/timerUtils';
+import EmptyState from '@/components/EmptyState';
 
-export default function TabTwoScreen() {
-  const completedTimers = useAppSelector((state) =>
-    state.timers.timers.filter((timer) => timer.status === "Completed")
-  );
+export default function HistoryScreen() {
+  const insets = useSafeAreaInsets();
+  const { timerLogs } = useTimers();
 
-  const formatDate = (isoString?: string) => {
-    if (!isoString) return "Unknown";
-    const date = new Date(isoString);
-    return date.toLocaleString(); // You can customize formatting here
-  };
+  // Sort logs by completion time (newest first)
+  const sortedLogs = [...timerLogs].sort((a, b) => b.completedAt - a.completedAt);
+
+  if (timerLogs.length === 0) {
+    return (
+      <View style={[styles.container, { paddingTop: insets.top }]}>
+        <View style={styles.header}>
+          <Text style={styles.title}>Timer History</Text>
+        </View>
+        <EmptyState type="history" />
+      </View>
+    );
+  }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Completed Timers</Text>
-      {completedTimers.length === 0 ? (
-        <Text style={styles.empty}>No completed timers yet.</Text>
-      ) : (
-        <FlatList
-          data={completedTimers}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.timerItem}>
-              <Text style={styles.name}>{item.name}</Text>
-              <Text style={styles.category}>Category: {item.category}</Text>
-              <Text style={styles.duration}>Duration: {item.duration}s</Text>
-              <Text style={styles.completedAt}>
-                Completed at: {formatDate(item.completedAt)}
+    <View style={[styles.container, { paddingTop: insets.top }]}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Timer History</Text>
+      </View>
+
+      <FlatList
+        data={sortedLogs}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.listContent}
+        renderItem={({ item }) => (
+          <View style={styles.historyItem}>
+            <View style={styles.itemHeader}>
+              <Text style={styles.itemName}>{item.name}</Text>
+              <View style={styles.categoryTag}>
+                <Tag size={14} color="#6A5ACD" />
+                <Text style={styles.categoryText}>{item.category}</Text>
+              </View>
+            </View>
+            
+            <View style={styles.itemDetails}>
+              <View style={styles.detailItem}>
+                <Clock size={16} color="#666" />
+                <Text style={styles.detailText}>
+                  {formatTime(item.duration, 'full')}
+                </Text>
+              </View>
+              
+              <Text style={styles.timeAgo}>
+                {timeAgo(item.completedAt)}
               </Text>
             </View>
-          )}
-        />
-      )}
+          </View>
+        )}
+      />
+
+      <StatusBar style="dark" />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
+  container: {
+    flex: 1,
+    backgroundColor: '#f8f9fa',
+  },
   header: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 16,
-    textAlign: "center",
+    backgroundColor: 'white',
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#EAEAEA',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
   },
-  empty: {
-    textAlign: "center",
-    color: "#666",
-    marginTop: 20,
+  title: {
+    fontFamily: 'Poppins-SemiBold',
+    fontSize: 20,
+    color: '#333',
   },
-  timerItem: {
-    padding: 15,
-    borderRadius: 8,
-    backgroundColor: "#f2f2f2",
-    marginBottom: 10,
+  listContent: {
+    padding: 16,
+    paddingBottom: 100, // Extra padding for bottom tabs
   },
-  name: { fontSize: 18, fontWeight: "600" },
-  category: { fontSize: 14, color: "#555" },
-  duration: { fontSize: 14, color: "#888" },
-  completedAt: { fontSize: 14, color: "#444", marginTop: 4 },
+  historyItem: {
+    backgroundColor: 'white',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    elevation: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+  },
+  itemHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  itemName: {
+    fontFamily: 'Poppins-Medium',
+    fontSize: 16,
+    color: '#333',
+    flex: 1,
+  },
+  categoryTag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f0f0f0',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  categoryText: {
+    fontFamily: 'Inter-Regular',
+    fontSize: 12,
+    color: '#6A5ACD',
+    marginLeft: 4,
+  },
+  itemDetails: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  detailItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  detailText: {
+    fontFamily: 'Inter-Regular',
+    fontSize: 14,
+    color: '#666',
+    marginLeft: 6,
+  },
+  timeAgo: {
+    fontFamily: 'Inter-Regular',
+    fontSize: 12,
+    color: '#999',
+  },
 });

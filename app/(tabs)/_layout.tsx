@@ -1,53 +1,68 @@
+import React from "react";
 import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { Clock, History, CirclePlus as PlusCircle } from 'lucide-react-native';
+import { StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const insets = useSafeAreaInsets();
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
+        tabBarActiveTintColor: '#6A5ACD', // Primary purple
+        tabBarInactiveTintColor: '#9E9E9E',
+        tabBarStyle: [
+          styles.tabBar,
+          {
+            height: 60 + insets.bottom,
+            paddingBottom: insets.bottom,
           },
-          default: {},
-        }),
-      }}>
+        ],
+        tabBarLabelStyle: styles.tabBarLabel,
+        headerShown: false,
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Welcome',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="person.3.fill" color={color} />,
+          title: 'Timers',
+          tabBarIcon: ({ color, size }) => (
+            <Clock size={size} color={color} />
+          ),
         }}
       />
-       <Tabs.Screen
-        name="timer"
+      <Tabs.Screen
+        name="create"
         options={{
-          title: 'Timer',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: 'New Timer',
+          tabBarIcon: ({ color, size }) => (
+            <PlusCircle size={size} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
         name="history"
         options={{
           title: 'History',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          tabBarIcon: ({ color, size }) => (
+            <History size={size} color={color} />
+          ),
         }}
       />
-      
-      
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  tabBar: {
+    borderTopWidth: 1,
+    borderTopColor: '#E0E0E0',
+    elevation: 0,
+    shadowOpacity: 0,
+  },
+  tabBarLabel: {
+    fontFamily: 'Inter-Regular',
+    fontSize: 12,
+  },
+});
