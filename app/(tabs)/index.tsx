@@ -90,6 +90,8 @@ export default function TimersScreen() {
     {}
   );
 
+
+
   if (timers.length === 0) {
     return (
       <View
@@ -107,6 +109,8 @@ export default function TimersScreen() {
     );
   }
 
+
+  
   return (
     <View
       style={[
@@ -149,6 +153,12 @@ export default function TimersScreen() {
                 onHalfwayAlert={handleHalfwayAlert}
               />
             )
+        )}
+
+        {filteredTimers.length === 0 && (
+          <View style={[styles.container , { backgroundColor: colors.background }]}>
+            <EmptyState type = "categories"  />
+          </View>
         )}
       </ScrollView>
 

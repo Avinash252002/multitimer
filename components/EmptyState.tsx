@@ -2,13 +2,18 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Plus, Clock } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
+import { useTheme } from '@/context/ThemeContext';
+import { darkTheme, lightTheme } from '@/styles/theme';
 
 interface EmptyStateProps {
-  type: 'timers' | 'history';
+  type: 'timers' | 'history' | 'categories';
 }
 
 const EmptyState: React.FC<EmptyStateProps> = ({ type }) => {
   const router = useRouter();
+  const {theme} = useTheme();
+  const colors = theme === 'light' ? lightTheme : darkTheme;
+
 
   const navigateToCreate = () => {
     router.push('/create');
@@ -16,13 +21,34 @@ const EmptyState: React.FC<EmptyStateProps> = ({ type }) => {
 
   if (type === 'timers') {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container , { backgroundColor: colors.background }]}>
         <View style={styles.iconContainer}>
           <Clock size={64} color="#ddd" />
         </View>
         <Text style={styles.title}>No Timers Yet</Text>
         <Text style={styles.description}>
           Create your first timer to start tracking your time effectively
+        </Text>
+        <TouchableOpacity 
+          style={styles.button}
+          onPress={navigateToCreate}
+        >
+          <Plus size={18} color="white" />
+          <Text style={styles.buttonText}>Create Timer</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  if (type === 'categories') {
+    return (
+      <View style={[styles.container , { backgroundColor: colors.background }]}>
+        <View style={styles.iconContainer}>
+          <Clock size={64} color="#ddd" />
+        </View>
+        <Text style={styles.title}>No Timers Yet</Text>
+        <Text style={styles.description}>
+         No timers have been created yet for this category
         </Text>
         <TouchableOpacity 
           style={styles.button}
@@ -54,6 +80,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+
   },
   iconContainer: {
     marginBottom: 16,
