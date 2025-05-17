@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native
 import { ChevronDown, ChevronRight, Play, Pause, RotateCcw } from 'lucide-react-native';
 import { Timer } from '@/types';
 import TimerCard from './TimerCard';
+import { useTheme } from '@/context/ThemeContext';
+import { darkTheme, lightTheme } from '@/styles/theme';
 
 interface CategoryGroupProps {
   category: string;
@@ -33,6 +35,9 @@ const CategoryGroup: React.FC<CategoryGroupProps> = ({
   onShowCompletionModal,
   onHalfwayAlert,
 }) => {
+  const {theme} = useTheme();
+  const colors = theme === 'light' ? lightTheme : darkTheme;
+
   const heightAnim = useRef(new Animated.Value(isExpanded ? 1 : 0)).current;
   const rotateAnim = useRef(new Animated.Value(isExpanded ? 1 : 0)).current;
 
@@ -62,11 +67,10 @@ const CategoryGroup: React.FC<CategoryGroupProps> = ({
   });
 
   const activeTimers = timers.filter(t => t.status === 'running' || t.status === 'paused');
-  const completedTimers = timers.filter(t => t.status === 'completed');
   const hasActiveTimers = activeTimers.length > 0;
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container , { backgroundColor: colors.background , shadowColor : colors.shadowColor}]}>
       <TouchableOpacity
         style={styles.header}
         onPress={() => onToggleExpand(category)}
@@ -76,7 +80,7 @@ const CategoryGroup: React.FC<CategoryGroupProps> = ({
           <Animated.View style={{ transform: [{ rotate }] }}>
             <ChevronRight size={20} color="#666" />
           </Animated.View>
-          <Text style={styles.categoryTitle}>{category}</Text>
+          <Text style={[styles.categoryTitle , { color: colors.textSecondary }]}>{category}</Text>
           <View style={styles.timerCountContainer}>
             <Text style={styles.timerCount}>{timers.length}</Text>
           </View>
@@ -99,7 +103,7 @@ const CategoryGroup: React.FC<CategoryGroupProps> = ({
                 onPress={() => onStartAll(category)}
               >
                 <Play size={16} color="#4caf50" />
-                <Text style={styles.bulkActionText}>Start All</Text>
+                <Text style={[styles.bulkActionText , { color: colors.textSecondary }]}>Start All</Text>
               </TouchableOpacity>
               
               <TouchableOpacity
@@ -107,7 +111,7 @@ const CategoryGroup: React.FC<CategoryGroupProps> = ({
                 onPress={() => onPauseAll(category)}
               >
                 <Pause size={16} color="#ff9800" />
-                <Text style={styles.bulkActionText}>Pause All</Text>
+                <Text style={[styles.bulkActionText , { color: colors.textSecondary }]}>Pause All</Text>
               </TouchableOpacity>
               
               <TouchableOpacity
@@ -115,7 +119,7 @@ const CategoryGroup: React.FC<CategoryGroupProps> = ({
                 onPress={() => onResetAll(category)}
               >
                 <RotateCcw size={16} color="#f44336" />
-                <Text style={styles.bulkActionText}>Reset All</Text>
+                <Text style={[styles.bulkActionText , { color: colors.textSecondary }]}>Reset All</Text>
               </TouchableOpacity>
             </View>
             
@@ -143,12 +147,10 @@ const CategoryGroup: React.FC<CategoryGroupProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
     borderRadius: 12,
     marginBottom: 16,
     overflow: 'hidden',
     elevation: 1,
-    shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
@@ -186,7 +188,8 @@ const styles = StyleSheet.create({
   },
   timerList: {
     padding: 16,
-    paddingTop: 0,
+    paddingTop: 16,
+    paddingBottom: 8,
   },
   emptyMessage: {
     fontFamily: 'Inter-Regular',

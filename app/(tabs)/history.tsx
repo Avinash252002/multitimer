@@ -7,10 +7,14 @@ import { useTimers } from '@/context/TimerContext';
 import { formatTime, timeAgo } from '@/utils/timerUtils';
 import EmptyState from '@/components/EmptyState';
 import ExportButton from '@/components/ExportButton';
+import { useTheme } from '@/context/ThemeContext';
+import { darkTheme, lightTheme } from '@/styles/theme';
 
 export default function HistoryScreen() {
   const insets = useSafeAreaInsets();
   const { timerLogs } = useTimers();
+  const { theme } = useTheme();
+  const colors = theme === 'light' ? lightTheme : darkTheme;
 
   // Sort logs by completion time (newest first)
   const sortedLogs = [...timerLogs].sort((a, b) => b.completedAt - a.completedAt);
@@ -27,9 +31,11 @@ export default function HistoryScreen() {
   }
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={[styles.container, { paddingTop: insets.top , backgroundColor: colors.background }]}>
       <View style={styles.header}>
-        <Text style={styles.title}>Timer History</Text>
+      <Text style={[styles.title, { color: colors.text }]}>
+
+          Timer History</Text>
       </View>
       <ExportButton timerLogs={timerLogs} />
       <FlatList
@@ -37,9 +43,9 @@ export default function HistoryScreen() {
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContent}
         renderItem={({ item }) => (
-          <View style={styles.historyItem}>
+          <View style={[styles.historyItem , {backgroundColor: colors.background , shadowColor : colors.shadowColor}]}>
             <View style={styles.itemHeader}>
-              <Text style={styles.itemName}>{item.name}</Text>
+              <Text style={[styles.itemName, { color: colors.text }]}>{item.name}</Text>
               <View style={styles.categoryTag}>
                 <Tag size={14} color="#6A5ACD" />
                 <Text style={styles.categoryText}>{item.category}</Text>
@@ -49,7 +55,7 @@ export default function HistoryScreen() {
             <View style={styles.itemDetails}>
               <View style={styles.detailItem}>
                 <Clock size={16} color="#666" />
-                <Text style={styles.detailText}>
+                <Text style={[styles.detailText , { color: colors.textSecondary }]}>
                   {formatTime(item.duration, 'full')}
                 </Text>
               </View>
@@ -70,10 +76,8 @@ export default function HistoryScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
   },
   header: {
-    backgroundColor: 'white',
     paddingVertical: 16,
     paddingHorizontal: 20,
     borderBottomWidth: 1,
@@ -94,14 +98,12 @@ const styles = StyleSheet.create({
     paddingBottom: 100, // Extra padding for bottom tabs
   },
   historyItem: {
-    backgroundColor: 'white',
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
-    elevation: 1,
-    shadowColor: '#000',
+    elevation: 3,
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 1,
     shadowRadius: 2,
   },
   itemHeader: {

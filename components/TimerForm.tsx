@@ -1,18 +1,20 @@
-import React, { useState } from 'react';
-import { 
-  View, 
-  Text, 
-  StyleSheet, 
-  TextInput, 
-  TouchableOpacity, 
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
   ScrollView,
   Switch,
   KeyboardAvoidingView,
-  Platform
-} from 'react-native';
-import { generateId } from '@/utils/timerUtils';
-import { Timer } from '@/types';
-import { ChevronDown, Plus, Clock, Tag } from 'lucide-react-native';
+  Platform,
+} from "react-native";
+import { generateId } from "@/utils/timerUtils";
+import { Timer } from "@/types";
+import { ChevronDown, Plus, Clock, Tag } from "lucide-react-native";
+import { useTheme } from "@/context/ThemeContext";
+import { darkTheme, lightTheme } from "@/styles/theme";
 
 interface TimerFormProps {
   categories: string[];
@@ -25,13 +27,15 @@ const TimerForm: React.FC<TimerFormProps> = ({
   onAddCategory,
   onCreateTimer,
 }) => {
-  const [name, setName] = useState('');
-  const [hours, setHours] = useState('0');
-  const [minutes, setMinutes] = useState('0');
-  const [seconds, setSeconds] = useState('0');
-  const [category, setCategory] = useState(categories[0] || '');
+  const { theme } = useTheme();
+  const colors = theme === "light" ? lightTheme : darkTheme;
+  const [name, setName] = useState("");
+  const [hours, setHours] = useState("0");
+  const [minutes, setMinutes] = useState("0");
+  const [seconds, setSeconds] = useState("0");
+  const [category, setCategory] = useState(categories[0] || "");
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
-  const [newCategory, setNewCategory] = useState('');
+  const [newCategory, setNewCategory] = useState("");
   const [hasHalfwayAlert, setHasHalfwayAlert] = useState(false);
 
   const calculateTotalSeconds = (): number => {
@@ -64,7 +68,7 @@ const TimerForm: React.FC<TimerFormProps> = ({
       duration: totalSeconds,
       remainingTime: totalSeconds,
       category,
-      status: 'idle',
+      status: "idle",
       createdAt: Date.now(),
       hasHalfwayAlert,
     };
@@ -72,10 +76,10 @@ const TimerForm: React.FC<TimerFormProps> = ({
     onCreateTimer(newTimer);
 
     // Reset form
-    setName('');
-    setHours('0');
-    setMinutes('0');
-    setSeconds('0');
+    setName("");
+    setHours("0");
+    setMinutes("0");
+    setSeconds("0");
     setHasHalfwayAlert(false);
   };
 
@@ -83,7 +87,7 @@ const TimerForm: React.FC<TimerFormProps> = ({
     if (newCategory.trim() && !categories.includes(newCategory.trim())) {
       onAddCategory(newCategory.trim());
       setCategory(newCategory.trim());
-      setNewCategory('');
+      setNewCategory("");
     }
     setShowCategoryDropdown(false);
   };
@@ -95,19 +99,21 @@ const TimerForm: React.FC<TimerFormProps> = ({
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.keyboardAvoidView}
     >
-      <ScrollView 
+      <ScrollView
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.formGroup}>
-          <Text style={styles.label}>Timer Name</Text>
-          <View style={styles.inputWrapper}>
+          <Text style={[styles.label, { color: colors.textSecondary }]}>
+            Timer Name
+          </Text>
+          <View style={[styles.inputWrapper ,{ backgroundColor: colors.border  }]}>
             <TextInput
-              style={styles.input}
+              style={[styles.input , { color: colors.text } ]}
               value={name}
               onChangeText={setName}
               placeholder="Enter timer name"
@@ -117,12 +123,17 @@ const TimerForm: React.FC<TimerFormProps> = ({
         </View>
 
         <View style={styles.formGroup}>
-          <Text style={styles.label}>Duration</Text>
+          <Text style={[styles.label, { color: colors.textSecondary }]}>
+            Duration
+          </Text>
           <View style={styles.timeContainer}>
             <View style={styles.timeInputWrapper}>
               <Text style={styles.timeLabel}>Hours</Text>
               <TextInput
-                style={styles.timeInput}
+                style={[
+                  styles.timeInput,
+                  { backgroundColor: colors.background, color: colors.text },
+                ]}
                 value={hours}
                 onChangeText={setHours}
                 keyboardType="number-pad"
@@ -133,13 +144,16 @@ const TimerForm: React.FC<TimerFormProps> = ({
             <View style={styles.timeInputWrapper}>
               <Text style={styles.timeLabel}>Minutes</Text>
               <TextInput
-                style={styles.timeInput}
+                style={[
+                  styles.timeInput,
+                  { backgroundColor: colors.background, color: colors.text },
+                ]}
                 value={minutes}
                 onChangeText={(text) => {
                   // Ensure minutes are between 0-59
                   const mins = parseInt(text);
                   if (isNaN(mins)) {
-                    setMinutes('');
+                    setMinutes("");
                   } else if (mins >= 0 && mins <= 59) {
                     setMinutes(mins.toString());
                   }
@@ -152,14 +166,17 @@ const TimerForm: React.FC<TimerFormProps> = ({
             <View style={styles.timeInputWrapper}>
               <Text style={styles.timeLabel}>Seconds</Text>
               <TextInput
-                style={styles.timeInput}
+                style={[
+                  styles.timeInput,
+                  { backgroundColor: colors.background, color: colors.text },
+                ]}
                 value={seconds}
                 onChangeText={(text) => {
                   // Ensure seconds are between.1
                   //                    //between 0-59
                   const secs = parseInt(text);
                   if (isNaN(secs)) {
-                    setSeconds('');
+                    setSeconds("");
                   } else if (secs >= 0 && secs <= 59) {
                     setSeconds(secs.toString());
                   }
@@ -172,23 +189,25 @@ const TimerForm: React.FC<TimerFormProps> = ({
         </View>
 
         <View style={styles.formGroup}>
-          <Text style={styles.label}>Category</Text>
+          <Text style={[styles.label, { color: colors.textSecondary }]}>
+            Category
+          </Text>
           <TouchableOpacity
-            style={styles.categorySelector}
+            style={[styles.categorySelector , { backgroundColor: colors.border }]}
             onPress={() => setShowCategoryDropdown(!showCategoryDropdown)}
           >
             <View style={styles.categoryValue}>
-              <Tag size={16} color="#666" />
-              <Text style={styles.categoryText}>
-                {category || 'Select a category'}
+              <Tag size={16} color={colors.textSecondary} />
+              <Text style={[styles.categoryText , { color: colors.text }]}>
+                {category || "Select a category"}
               </Text>
             </View>
             <ChevronDown size={18} color="#666" />
           </TouchableOpacity>
 
           {showCategoryDropdown && (
-            <View style={styles.dropdownContainer}>
-              <ScrollView 
+            <View style={[styles.dropdownContainer , { backgroundColor: colors.background }]}>
+              <ScrollView
                 style={styles.categoriesList}
                 nestedScrollEnabled={true}
               >
@@ -198,10 +217,13 @@ const TimerForm: React.FC<TimerFormProps> = ({
                     style={styles.categoryItem}
                     onPress={() => selectCategory(cat)}
                   >
-                    <Text style={[
-                      styles.categoryItemText,
-                      cat === category && styles.selectedCategoryText,
-                    ]}>
+                    <Text
+                      style={[
+                        styles.categoryItemText,
+                        { color: colors.text },
+                        cat === category && styles.selectedCategoryText,
+                      ]}
+                    >
                       {cat}
                     </Text>
                   </TouchableOpacity>
@@ -216,7 +238,7 @@ const TimerForm: React.FC<TimerFormProps> = ({
                   placeholder="Add new category"
                   placeholderTextColor="#999"
                 />
-                <TouchableOpacity 
+                <TouchableOpacity
                   style={styles.addCategoryButton}
                   onPress={handleAddCategory}
                   disabled={!newCategory.trim()}
@@ -232,13 +254,17 @@ const TimerForm: React.FC<TimerFormProps> = ({
           <View style={styles.switchRow}>
             <View style={styles.switchLabelContainer}>
               <Clock size={18} color="#666" />
-              <Text style={styles.switchLabel}>Halfway Alert</Text>
+              <Text
+                style={[styles.switchLabel, { color: colors.textSecondary }]}
+              >
+                Halfway Alert
+              </Text>
             </View>
             <Switch
               value={hasHalfwayAlert}
               onValueChange={setHasHalfwayAlert}
-              trackColor={{ false: '#EAEAEA', true: '#BDB4F0' }}
-              thumbColor={hasHalfwayAlert ? '#6A5ACD' : '#F4F3F4'}
+              trackColor={{ false: "#EAEAEA", true: "#BDB4F0" }}
+              thumbColor={hasHalfwayAlert ? "#6A5ACD" : "#F4F3F4"}
               ios_backgroundColor="#EAEAEA"
             />
           </View>
@@ -247,10 +273,7 @@ const TimerForm: React.FC<TimerFormProps> = ({
           </Text>
         </View>
 
-        <TouchableOpacity 
-          style={styles.createButton}
-          onPress={handleSubmit}
-        >
+        <TouchableOpacity style={styles.createButton} onPress={handleSubmit}>
           <Text style={styles.createButtonText}>Create Timer</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -272,78 +295,77 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   label: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: "Inter-SemiBold",
     fontSize: 14,
-    color: '#333',
+    color: "#333",
     marginBottom: 8,
   },
   inputWrapper: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: "#F5F5F5",
     borderRadius: 8,
     paddingHorizontal: 12,
     height: 48,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   input: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: "Inter-Regular",
     fontSize: 16,
-    color: '#333',
+    color: "#333",
   },
   timeContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   timeInputWrapper: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
     borderRadius: 8,
     padding: 12,
   },
   timeLabel: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: "Inter-Regular",
     fontSize: 12,
-    color: '#999',
+    color: "#999",
     marginBottom: 4,
   },
   timeInput: {
-    fontFamily: 'Inter-Bold',
+    fontFamily: "Inter-Bold",
     fontSize: 18,
-    color: '#333',
-    textAlign: 'center',
+    color: "#333",
+    textAlign: "center",
   },
   timeSeparator: {
-    fontFamily: 'Inter-Bold',
+    fontFamily: "Inter-Bold",
     fontSize: 24,
-    color: '#666',
+    color: "#666",
     marginHorizontal: 8,
   },
   categorySelector: {
-    backgroundColor: '#F5F5F5',
+    backgroundColor: "#F5F5F5",
     borderRadius: 8,
     paddingHorizontal: 12,
     height: 48,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   categoryValue: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   categoryText: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: "Inter-Regular",
     fontSize: 16,
-    color: '#333',
+    color: "#333",
     marginLeft: 8,
   },
   dropdownContainer: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 8,
     marginTop: 8,
     padding: 8,
     borderWidth: 1,
-    borderColor: '#EAEAEA',
-    shadowColor: '#000',
+    borderColor: "#EAEAEA",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -359,71 +381,71 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   categoryItemText: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: "Inter-Regular",
     fontSize: 14,
-    color: '#333',
+    color: "#333",
   },
   selectedCategoryText: {
-    color: '#6A5ACD',
-    fontFamily: 'Inter-SemiBold',
+    color: "#6A5ACD",
+    fontFamily: "Inter-SemiBold",
   },
   addCategoryContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     borderTopWidth: 1,
-    borderTopColor: '#EAEAEA',
+    borderTopColor: "#EAEAEA",
     paddingTop: 8,
     marginTop: 8,
   },
   addCategoryInput: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: "#F5F5F5",
     borderRadius: 8,
     paddingHorizontal: 12,
     height: 40,
     marginRight: 8,
-    fontFamily: 'Inter-Regular',
+    fontFamily: "Inter-Regular",
     fontSize: 14,
   },
   addCategoryButton: {
-    backgroundColor: '#6A5ACD',
+    backgroundColor: "#6A5ACD",
     borderRadius: 8,
     width: 40,
     height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   switchRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 8,
   },
   switchLabelContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   switchLabel: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: "Inter-SemiBold",
     fontSize: 14,
-    color: '#333',
+    color: "#333",
     marginLeft: 8,
   },
   switchDescription: {
-    fontFamily: 'Inter-Regular',
+    fontFamily: "Inter-Regular",
     fontSize: 12,
-    color: '#666',
+    color: "#666",
   },
   createButton: {
-    backgroundColor: '#6A5ACD',
+    backgroundColor: "#6A5ACD",
     borderRadius: 8,
     paddingVertical: 14,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 10,
   },
   createButtonText: {
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: "Inter-SemiBold",
     fontSize: 16,
-    color: 'white',
+    color: "white",
   },
 });
 

@@ -6,9 +6,13 @@ import { useRouter } from 'expo-router';
 import TimerForm from '@/components/TimerForm';
 import { useTimers } from '@/context/TimerContext';
 import { Timer } from '@/types';
+import { useTheme } from '@/context/ThemeContext';
+import { darkTheme, lightTheme } from '@/styles/theme';
 
 export default function CreateTimerScreen() {
   const insets = useSafeAreaInsets();
+  const { theme } = useTheme();
+  const colors = theme === 'light' ? lightTheme : darkTheme;
   const router = useRouter();
   const { categories, addCategory, addTimer } = useTimers();
 
@@ -19,9 +23,10 @@ export default function CreateTimerScreen() {
   };
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={[styles.container, { paddingTop: insets.top , backgroundColor: colors.background }]}>
       <View style={styles.header}>
-        <Text style={styles.title}>Create New Timer</Text>
+      <Text style={[styles.title, { color: colors.text }]}>
+          Create New Timer</Text>
       </View>
 
       <TimerForm
@@ -38,7 +43,6 @@ export default function CreateTimerScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
   },
   header: {
     paddingVertical: 16,

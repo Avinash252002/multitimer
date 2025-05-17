@@ -8,6 +8,7 @@ import { Poppins_500Medium, Poppins_600SemiBold } from '@expo-google-fonts/poppi
 import { SplashScreen } from 'expo-router';
 import { Platform } from 'react-native';
 import { TimerProvider } from '@/context/TimerContext';
+import { ThemeProvider } from '@/context/ThemeContext';
 
 // Prevent splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
@@ -36,6 +37,7 @@ export default function RootLayout() {
   }
 
   return (
+    <ThemeProvider>
     <TimerProvider>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -43,5 +45,6 @@ export default function RootLayout() {
       </Stack>
       <StatusBar style={Platform.OS === 'ios' ? 'dark' : 'auto'} />
     </TimerProvider>
+    </ThemeProvider>
   );
 }

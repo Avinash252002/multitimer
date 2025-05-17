@@ -4,6 +4,8 @@ import { Play, Pause, RotateCcw, CircleCheck as CheckCircle } from 'lucide-react
 import { Timer } from '@/types';
 import { formatTime, calculateProgress, getStatusColor } from '@/utils/timerUtils';
 import ProgressBar from './ProgressBar';
+import { useTheme } from '@/context/ThemeContext';
+import { darkTheme, lightTheme } from '@/styles/theme';
 
 interface TimerCardProps {
   timer: Timer;
@@ -24,6 +26,8 @@ const TimerCard: React.FC<TimerCardProps> = ({
 }) => {
   const [progress, setProgress] = useState(calculateProgress(timer));
   const scaleAnim = useRef(new Animated.Value(1)).current;
+  const {theme} = useTheme();
+  const colors = theme === 'light' ? lightTheme : darkTheme;
   
   useEffect(() => {
     setProgress(calculateProgress(timer));
@@ -70,20 +74,22 @@ const TimerCard: React.FC<TimerCardProps> = ({
         styles.container, 
         { 
           borderLeftColor: statusColor,
+          backgroundColor: colors.background,
+          shadowColor: colors.shadowColor,
           transform: [{ scale: scaleAnim }]
         }
       ]}
     >
       <View style={styles.header}>
-        <Text style={styles.name}>{timer.name}</Text>
+        <Text style={[styles.name , { color: colors.text }]}>{timer.name}</Text>
         <Text style={styles.category}>{timer.category}</Text>
       </View>
       
       <View style={styles.timeContainer}>
-        <Text style={styles.timeText}>
+        <Text style={[styles.timeText , { color: colors.text }]}>
           {formatTime(timer.remainingTime)}
         </Text>
-        <Text style={styles.totalTime}>
+        <Text style={[styles.totalTime, { color: colors.text }]}>
           / {formatTime(timer.duration)}
         </Text>
       </View>
@@ -127,7 +133,6 @@ const TimerCard: React.FC<TimerCardProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,

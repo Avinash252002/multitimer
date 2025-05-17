@@ -9,6 +9,8 @@ import {
   UIManager,
 } from "react-native";
 import { Filter } from "lucide-react-native";
+import { useTheme } from "@/context/ThemeContext";
+import { darkTheme, lightTheme } from "@/styles/theme";
 
 interface CategoryFilterProps {
   categories: string[];
@@ -29,6 +31,9 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
   onSelectCategory,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const {theme} = useTheme();
+  const colors = theme === 'light' ? lightTheme : darkTheme;
+  
 
   const toggleDropdown = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -41,10 +46,10 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container , { backgroundColor: colors.background , shadowColor: colors.shadowColor }]}>
       <TouchableOpacity style={styles.header} onPress={toggleDropdown}>
-        <Filter size={18} color="#666" />
-        <Text style={styles.headerText}>
+        <Filter size={18} color={colors.textSecondary} />
+        <Text style={[styles.headerText , { color: colors.textSecondary }]}>
           {selectedCategory || "All Categories"}
         </Text>
       </TouchableOpacity>
@@ -60,7 +65,7 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
           >
             <Text
               style={[
-                styles.optionText,
+                [styles.optionText, { color: colors.text }],
                 selectedCategory === null && styles.optionTextSelected,
               ]}
             >
@@ -79,7 +84,8 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
             >
               <Text
                 style={[
-                  styles.optionText,
+                  [styles.optionText, { color: colors.text }],
+                    
                   selectedCategory === category && styles.optionTextSelected,
                 ]}
               >
@@ -93,13 +99,13 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
   );
 };
 
+
+
 const styles = StyleSheet.create({
   container: {
     marginBottom: 16,
     borderRadius: 12,
-    backgroundColor: "#fff",
     elevation: 3,
-    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1.5 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
@@ -108,8 +114,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 14,
-    borderBottomColor: "#eee",
-    borderBottomWidth: 1,
   },
   headerText: {
     marginLeft: 10,

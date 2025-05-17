@@ -3,16 +3,22 @@ import { Tabs } from 'expo-router';
 import { Clock, History, CirclePlus as PlusCircle } from 'lucide-react-native';
 import { StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTheme } from "@/context/ThemeContext";
+import { darkTheme, lightTheme } from "@/styles/theme";
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
 
+  const {theme} = useTheme();
+  const colors = theme === 'light' ? lightTheme : darkTheme;
+  
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: '#6A5ACD', // Primary purple
+        tabBarActiveTintColor: colors.activeicon, // Primary purple
         tabBarInactiveTintColor: '#9E9E9E',
         tabBarStyle: [
+          {backgroundColor : colors.background},
           styles.tabBar,
           {
             height: 60 + insets.bottom,
