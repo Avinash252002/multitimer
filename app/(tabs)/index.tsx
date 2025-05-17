@@ -11,7 +11,7 @@ import {
 import { useRouter } from "expo-router";
 
 export default function App() {
-  return <View style={styles.container}>hello world</View>;
+  return <View style={styles.container}><Text>Welcome to timer</Text></View>;
 }
 
 const styles = StyleSheet.create({
