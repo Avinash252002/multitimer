@@ -119,7 +119,7 @@ export default function TimersScreen() {
       ]}
     >
       <View style={[styles.header, { backgroundColor: colors.surface }]}>
-        <Text style={[styles.title, { color: colors.text }]}>Timer App</Text>
+        <Text style={[styles.title, { color: colors.text }]}>Multi Timer</Text>
         <ThemeToggle />
       </View>
 
