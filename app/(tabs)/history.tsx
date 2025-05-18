@@ -15,7 +15,6 @@ import EmptyState from "@/components/EmptyState";
 import ExportButton from "@/components/ExportButton";
 import { useTheme } from "@/context/ThemeContext";
 import { darkTheme, lightTheme } from "@/styles/theme";
-
 export default function HistoryScreen() {
   const insets = useSafeAreaInsets();
   const { timerLogs } = useTimers();
@@ -29,14 +28,23 @@ export default function HistoryScreen() {
 
   if (timerLogs.length === 0) {
     return (
-      <View style={[styles.container, { paddingTop: insets.top }]}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Timer History</Text>
+      <View
+        style={[
+          styles.container,
+          { paddingTop: insets.top, backgroundColor: colors.background },
+        ]}
+      >
+        <View style={[styles.header, { backgroundColor: colors.surface }]}>
+          <Text style={[styles.title, { color: colors.text }]}>
+            Timer History
+          </Text>
         </View>
         <EmptyState type="history" />
       </View>
     );
   }
+
+  
 
   return (
     <View
