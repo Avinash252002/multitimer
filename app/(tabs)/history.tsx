@@ -32,7 +32,7 @@ export default function HistoryScreen() {
 
   return (
     <View style={[styles.container, { paddingTop: insets.top , backgroundColor: colors.background }]}>
-      <View style={styles.header}>
+<View style={[styles.header, { backgroundColor: colors.surface }]}>
       <Text style={[styles.title, { color: colors.text }]}>
 
           Timer History</Text>
@@ -81,9 +81,12 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#EAEAEA',
+    borderBottomColor: "#EAEAEA",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     elevation: 2,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
