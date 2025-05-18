@@ -61,3 +61,6 @@
 3.Expo is used to simplify setup and testing on multiple devices.
 
 
+**Screen shots of the app**
+
+![Home Screen](assets/images/HomeScreen.jpeg)
