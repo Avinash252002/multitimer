@@ -63,4 +63,8 @@
 
 **Screen shots of the app**
 
-![Home Screen](assets/images/HomeScreen.jpeg)
+<p float="left">
+  <img src="assets/images/HomeScreenLight.jpeg" width="30%" height = "300px" />
+  <img src="assets/images/CreateTimerLight.jpeg" width="30%" height = "300px" />
+  <img src="assets/images/HistoryLight.jpeg" width="30%" height = "300px" />
+</p>
