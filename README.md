@@ -77,4 +77,4 @@
 
 **Download APK**
 
-[Download APK](https://drive.google.com/uc?export=download&id=1AzacIXmYw9PZSCf_rHsMwJzbO4z32H8b)
+[Download APK](https://drive.google.com/file/d/1xgg-GgCB_pveAhs-sDwvtTY8qEOTy22O/view?usp=sharing)
