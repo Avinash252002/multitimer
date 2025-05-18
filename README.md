@@ -64,7 +64,13 @@
 **Screen shots of the app**
 
 <p float="left">
-  <img src="assets/images/HomeScreenLight.jpeg" width="30%" height = "300px" />
-  <img src="assets/images/CreateTimerLight.jpeg" width="30%" height = "300px" />
-  <img src="assets/images/HistoryLight.jpeg" width="30%" height = "300px" />
+  <img src="assets/images/HomeScreenLight.jpeg" width="30%"  />
+  <img src="assets/images/CreateTimerLight.jpeg" width="30%"  />
+  <img src="assets/images/HistoryLight.jpeg" width="30%" />
+</p>
+
+<p float="left">
+  <img src="assets/images/HomeScreenDark.jpeg" width="30%"  />
+  <img src="assets/images/CreateTimerDark.jpeg" width="30%"  />
+  <img src="assets/images/HistoryDark.jpeg" width="30%" />
 </p>
